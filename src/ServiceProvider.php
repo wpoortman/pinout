@@ -2,8 +2,8 @@
 
 namespace DanJohnson95\Pinout;
 
+use DanJohnson95\Pinout\Services\I2CService;
 use DanJohnson95\Pinout\Shell\Commandable;
-use DanJohnson95\Pinout\Shell\SysFile;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 
 class ServiceProvider extends BaseServiceProvider
@@ -20,6 +20,8 @@ class ServiceProvider extends BaseServiceProvider
         ], 'config');
 
         $this->app->bind(Commandable::class, config('pinout.sys_file'));
+
+        $this->app->singleton('i2c.service', fn () => new I2CService());
     }
 
     public function boot()
@@ -31,6 +33,11 @@ class ServiceProvider extends BaseServiceProvider
             Console\ListenInterruptsCommand::class,
             Console\StartCommand::class,
             Console\SetCommand::class,
+
+            Console\I2C\I2CDetectCommand::class,
+            Console\I2C\I2CReadCommand::class,
+            Console\I2C\I2CWriteCommand::class,
+            Console\AirQualityCommand::class,
         ]);
     }
 }
